@@ -3,60 +3,343 @@
 <head>
   <meta charset="UTF-8" />
   <title>Domino Championship Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <div class="container">
-    <h1>Domino Championship Tracker</h1>
-
-    <div class="theme-toggle">
-      <input type="checkbox" id="themeToggle" />
-      <label for="themeToggle" class="toggle-label">
-        <span class="toggle-ball"></span>
-      </label>
-      <span class="toggle-text">Dark/Light Mode</span>
-    </div>
-
-    <section class="section">
-      <h2>1. Add Players (exactly 8)</h2>
-      <div class="input-row">
-        <input type="text" id="playerInput" placeholder="Enter player name" />
-        <button onclick="addPlayer()">Add Player</button>
-      </div>
-      <ul id="playerList"></ul>
-      <div class="button-row">
-        <button id="generateSetBtn" onclick="generateSet()" disabled>Generate Set</button>
-        <button onclick="resetAll()">Reset All</button>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>2. Matches</h2>
-      <div id="matches"></div>
-    </section>
-
-    <section class="section">
-      <h2>3. Leaderboard</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Total Score</th>
-            <th>Matches Played</th>
-            <th>Match Log</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard"></tbody>
-      </table>
-      <button onclick="exportCSV()">Export CSV</button>
-    </section>
+  <h1>Domino Championship Tracker</h1>
+  <div class="theme-toggle">
+    <input type="checkbox" id="themeToggle" />
+    <label for="themeToggle" class="toggle-label">
+      <span class="toggle-ball"></span>
+    </label>
+    <span class="toggle-text">Dark/Light Mode</span>
+  </div>
+  <h2>1. Add Players (exactly 8)</h2>
+  <input type="text" id="playerInput" placeholder="Enter player name" />
+  <button onclick="addPlayer()">Add Player</button>
+  <ul id="playerList"></ul>
+  <div style="margin-top: 1rem;">
+    <button id="generateSetBtn" onclick="generateSet()" disabled>Generate Set</button>
+    <button onclick="resetAll()">Reset All</button>
   </div>
 
-  <!-- JavaScript block moved to end of body for performance -->
-  <script type="text/javascript">
-    // your existing <script> goes here, unchanged
+  <h2>2. Matches</h2>
+  <div id="matches"></div>
+
+  <h2>3. Leaderboard</h2>
+  <table>
+    <thead>
+      <tr><th>Player</th><th>Total Score</th><th>Matches Played</th><th>Match Log</th></tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+  <button onclick="exportCSV()">Export CSV</button>
+
+  <script type="text/javascript"> 
+
+    let message = '';
+
+    try {
+      localStorage.setItem('testKey', 'testValue');
+      const test = localStorage.getItem('testKey');
+      message = '✅ localStorage working: ' + test;
+    } catch (err) {
+      message = '❌ localStorage failed: ' + err;
+    }
+
+    const p = document.createElement('p');
+    p.textContent = message;
+    p.style.color = message.startsWith('✅') ? 'green' : 'red';
+    p.style.fontSize = '18px';
+    document.body.appendChild(p);
+
+
+    const players = [];
+    const scores = {};
+    const matchCounts = {};
+    const matchLogs = {};
+    const matches = [];
+
+    document.getElementById('playerInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') addPlayer();
+    });
+
+    function addPlayer() {
+      const input = document.getElementById('playerInput');
+      const name = input.value.trim();
+      if (!name || players.includes(name)) return;
+      if (players.length >= 8) return alert('Exactly 8 players allowed.');
+      players.push(name);
+      scores[name] = 0;
+      matchCounts[name] = 0;
+      matchLogs[name] = [];
+      
+      const li = document.createElement('li');
+      li.textContent = name + ' ';
+      
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Delete';
+      delBtn.onclick = () => deletePlayer(name, li);
+      
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = () => editPlayer(name, li);
+
+      delBtn.className = 'player-btn';
+      editBtn.className = 'player-btn';
+      
+      li.appendChild(delBtn);
+      li.appendChild(editBtn);
+      document.getElementById('playerList').appendChild(li);
+      input.value = '';
+      updateGenerateSetButton();
+    }
+
+    function deletePlayer(name, li) {
+      const i = players.indexOf(name);
+      if (i !== -1) players.splice(i, 1);
+      delete scores[name];
+      delete matchCounts[name];
+      delete matchLogs[name];
+      li.remove();
+      updateGenerateSetButton();
+    }
+
+    function editPlayer(name, li) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = name;
+
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.onclick = () => {
+        const newName = input.value.trim();
+        if (!newName || players.includes(newName)) return alert('Invalid or duplicate name');
+
+        const i = players.indexOf(name);
+        players[i] = newName;
+
+        scores[newName] = scores[name];
+        matchCounts[newName] = matchCounts[name];
+        matchLogs[newName] = matchLogs[name];
+        delete scores[name];
+        delete matchCounts[name];
+        delete matchLogs[name];
+
+        li.innerHTML = newName + ' ';
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => deletePlayer(newName, li);
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.onclick = () => editPlayer(newName, li);
+        li.appendChild(delBtn);
+        li.appendChild(editBtn);
+      };
+
+      li.innerHTML = '';
+      li.appendChild(input);
+      li.appendChild(saveBtn);
+    }
+
+    function updateGenerateSetButton() {
+      const btn = document.getElementById('generateSetBtn');
+      btn.disabled = players.length !== 8;
+    }
+
+
+    function generateSet() {
+      document.getElementById('generateSetBtn').disabled = true;
+      
+      // Disable all delete and edit buttons
+      document.querySelectorAll('#playerList button').forEach(btn => {
+        if (btn.textContent === 'Delete' || btn.textContent === 'Edit') {
+          btn.disabled = true;
+        }
+      });
+
+      generateMatches();
+      updateLeaderboard();
+      
+    }
+
+    function generateMatches() {
+      matches.length = 0;
+      const shuffledPlayers = shuffle(players);
+      const schedule = [
+        [0,1,2,3],[4,5,6,7],[0,4,1,5],[2,6,3,7],
+        [0,6,1,7],[2,4,3,5],[0,2,4,6],[1,3,5,7],
+        [0,5,3,6],[1,4,2,7],[0,7,2,5],[1,6,3,4],
+        [1,2,4,7],[3,5,6,0]
+      ];
+      schedule.forEach((matchPlayers, i) => {
+        matches.push({
+          id: i + 1,
+          players: matchPlayers.map(idx => shuffledPlayers[idx]),
+          scores: []
+        });
+      });
+      matches.forEach(renderMatch);
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderMatch(match) {
+      const div = document.createElement('div');
+      div.className = 'match';
+      div.id = `match-${match.id}`;
+
+      const [p1, p2, p3, p4] = match.players;
+
+      div.innerHTML = `
+        <h4>Match ${match.id}</h4>
+
+        <div class="score-inputs">
+          <label><span class="teamA">${p1}</span><input type="number" min="0" id="m${match.id}-${p1}" /></label>
+          <label><span class="teamA">${p2}</span><input type="number" min="0" id="m${match.id}-${p2}" /></label>
+          <h1>Vs</h1>
+          <label><span class="teamB">${p3}</span><input type="number" min="0" id="m${match.id}-${p3}" /></label>
+          <label><span class="teamB">${p4}</span><input type="number" min="0" id="m${match.id}-${p4}" /></label>
+        </div>
+        <div align="center">
+          <button onclick="submitScores(${match.id})">Submit</button>
+          <button onclick="editScores(${match.id})">Edit Scores</button>
+        </div>
+      `;
+
+      document.getElementById('matches').appendChild(div);
+    }
+
+    function submitScores(id) {
+      const match = matches.find(m => m.id === id);
+      const inputs = match.players.map(p => {
+        const val = parseInt(document.getElementById(`m${id}-${p}`).value);
+        if (isNaN(val) || val < 0) throw new Error(`Invalid score for ${p}`);
+        return [p, val];
+      });
+
+      match.scores = inputs.map(([_, score]) => score);
+      inputs.forEach(([p, val]) => {
+        scores[p] += val;
+        matchCounts[p]++;
+        matchLogs[p].push(`Match ${id}: +${val}`);
+      });
+
+      // Store match result in localStorage
+      const history = JSON.parse(localStorage.getItem("matchHistory") || "[]");
+      const matchData = {
+        globalMatchId: history.length + 1,
+        date: new Date().toISOString(),
+        players: match.players,
+        scores: match.scores
+      };
+      history.push(matchData);
+      localStorage.setItem("matchHistory", JSON.stringify(history));
+
+      // Disable match inputs
+      const matchEl = document.getElementById(`match-${id}`);
+      matchEl.querySelectorAll('input, button:not(:last-child)').forEach(el => el.disabled = true);
+
+      // End if player reaches 80
+      let ended = false;
+      players.forEach(p => {
+        if (scores[p] >= 80) {
+          alert(`Game Over! ${p} has reached 80 points.`);
+          ended = true;
+        }
+      });
+      if (ended) {
+        document.querySelectorAll('.match').forEach(m => {
+          m.querySelectorAll('input, button').forEach(el => el.disabled = true);
+        });
+      }
+
+      updateLeaderboard();
+    }
+
+    function editScores(id) {
+      const match = matches.find(m => m.id === id);
+      if (!match.scores.length) return;
+      match.players.forEach((p, i) => {
+        const oldScore = match.scores[i];
+        scores[p] -= oldScore;
+        matchCounts[p]--;
+        matchLogs[p] = matchLogs[p].filter(log => !log.startsWith(`Match ${id}:`));
+      });
+      match.scores = [];
+      const container = document.getElementById(`match-${id}`);
+      container.classList.remove('disabled');
+      container.querySelectorAll('input, button').forEach(el => el.disabled = false);
+      match.players.forEach(p => {
+        document.getElementById(`m${id}-${p}`).value = '';
+      });
+      updateLeaderboard();
+    }
+
+    function updateLeaderboard() {
+      const tbody = document.getElementById('leaderboard');
+      tbody.innerHTML = '';
+      [...players].sort((a, b) => scores[a] - scores[b]).forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p}</td>
+          <td>${scores[p]}</td>
+          <td>${matchCounts[p]}</td>
+          <td><button onclick="showMatchLog('${p}')">View</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function resetAll() {
+      if (!confirm('Reset all data?')) return;
+      location.reload();
+    }
+
+    function exportCSV() {
+      let csv = 'Player,Score,Matches Played\n';
+      players.forEach(p => {
+        csv += `${p},${scores[p]},${matchCounts[p]}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'results.csv';
+      a.click();
+    }
+
+    function showMatchLog(player) {
+      alert(matchLogs[player].join('\n') || 'No matches played yet');
+    }
+
+    const toggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+      root.classList.add('light');
+      toggle.checked = true;
+    }
+
+    // Switch themes
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        root.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        root.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
   </script>
 </body>
 </html>
