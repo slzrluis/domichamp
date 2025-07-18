@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Domino Match History</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #30363d;
+      text-align: center;
+    }
+
+    th {
+      background-color: #0d1117;
+      color: #8b949e;
+    }
+
+    td {
+      color: #c9d1d9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Match History</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Team A</th>
+        <th>Team A Scores</th>
+        <th>Team B</th>
+        <th>Team B Scores</th>
+      </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+  </table>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem('matchHistory') || '[]');
+    const tbody = document.getElementById('historyTable');
+
+    data.forEach((match, idx) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${new Date(match.timestamp).toLocaleString()}</td>
+        <td>${match.teamA.join(' & ')}</td>
+        <td>${match.scores[0].join(', ')}</td>
+        <td>${match.teamB.join(' & ')}</td>
+        <td>${match.scores[1].join(', ')}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>

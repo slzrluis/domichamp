@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+
+
+:root {
+  /* Colors */
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --input-bg: #2a2a2a;
+  --text-color: #e0e0e0;
+  --heading-color: #ffffff;
+  --subheading-color: #b3b3b3;
+  --primary-color: #3a5068; /* nice bright blue */
+  --primary-hover: #2563eb;
+  --team-a: #3a5068;  /* fixed double # */
+  --team-b: #8b3a3a;  /* vibrant red */
+  --border-color: #333;
+  --disabled-opacity: 0.4;
+  /* Font */
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 2rem;
+}
+
+h1 {
+  color: var(--heading-color);
+  font-weight: 700;
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  margin-top: 2.5rem;
+  color: var(--subheading-color);
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+input, button {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-family);
+  transition: border-color 0.2s ease;
+}
+
+input[type="number"] {
+  width: 80px;
+}
+
+input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: var(--primary-color);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgb(59 130 246 / 0.3);
+}
+
+button:hover:enabled {
+  background-color: var(--primary-hover);
+  box-shadow: 0 6px 12px rgb(37 99 235 / 0.5);
+}
+
+button:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgb(0 0 0 / 0.6);
+  color: var(--text-color);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 0.8rem 1rem;
+  text-align: center;
+}
+
+th {
+  background-color: var(--bg-color);
+  font-weight: 700;
+  color: var(--subheading-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.match {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.7);
+  padding: 1.25rem 2rem;
+  margin: 1.5rem auto;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: var(--text-color);
+}
+
+.match h4 {
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  font-size: 1.6rem;
+  text-align: left;
+}
+
+.teams {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.teamA, .teamB {
+  flex: 1 1 45%;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.teamA {
+  background-color: var(--team-a);
+  box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
+}
+
+.teamB {
+  background-color: var(--team-b);
+  box-shadow: 0 4px 12px rgb(239 68 68 / 0.5);
+}
+
+.vs {
+  flex: 0 0 10%;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--subheading-color);
+  align-self: center;
+  user-select: none;
+}
+
+.score-inputs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.score-inputs label {
+  flex: 1 1 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-color);
+  user-select: none;
+}
+
+.score-inputs input {
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  width: 70px;
+  font-size: 1.2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  text-align: center;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  transition: border-color 0.3s ease;
+}
+
+.score-inputs input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.match button {
+  padding: 0.6rem 1.4rem;
+  margin: 0 0.4rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match button:hover:not(:disabled) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 16px rgb(59 130 246 / 0.7);
+  color: white;
+}
+
+#playerList li {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+
+.player-btn {
+  background-color: #2a2a2a;
+  color: #ccc;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.player-btn:hover {
+  background-color: #3a3a3a;
+  color: #fff;
+}
+
+:root.light {
+  --bg-color: #f5f5f5;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --text-color: #111111;
+  --heading-color: #000000;
+  --subheading-color: #555555;
+  --primary-color: #3a5068;
+  --primary-hover: #2563eb;
+  --team-a: #3a5068;
+  --team-b: #8b3a3a;
+  --border-color: #dddddd;
+  --disabled-opacity: 0.4;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  float: right;
+  margin-top: -3.5rem;
+  margin-right: 1rem;
+}
+
+.toggle-label {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  background: var(--border-color);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-label .toggle-ball {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+input#themeToggle {
+  display: none;
+}
+
+input#themeToggle:checked + .toggle-label {
+  background: var(--primary-hover);
+}
+
+input#themeToggle:checked + .toggle-label .toggle-ball {
+  transform: translateX(24px);
+}
+
+.toggle-text {
+  font-size: 0.9rem;
+  color: var(--subheading-color);
+}
+
