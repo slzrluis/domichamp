@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Domino Match History</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -12,7 +12,7 @@
       padding: 2rem;
     }
 
-    h1 {
+    h1, h2 {
       color: #ffffff;
     }
 
@@ -45,35 +45,121 @@
 </head>
 <body>
   <h1>Match History</h1>
+
+  <h2>Match Summary (Players & Scores)</h2>
   <table>
     <thead>
       <tr>
-        <th>#</th>
+        <th>Game ID</th>
+        <th>Match #</th> <!-- New column for match number -->
         <th>Date</th>
-        <th>Team A</th>
-        <th>Team A Scores</th>
-        <th>Team B</th>
-        <th>Team B Scores</th>
+        <th>Player 1</th>
+        <th>Score</th>
+        <th>Player 2</th>
+        <th>Score</th>
+        <th>Player 3</th>
+        <th>Score</th>
+        <th>Player 4</th>
+        <th>Score</th>
       </tr>
     </thead>
-    <tbody id="historyTable"></tbody>
+    <tbody id="matchSummaryTable"></tbody>
+  </table>
+
+  <h2>Game Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Game ID</th>
+        <th>Date Range</th>
+        <th>Players</th>
+        <th>Winner</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody id="gameSummaryTable"></tbody>
   </table>
 
   <script>
     const data = JSON.parse(localStorage.getItem('matchHistory') || '[]');
-    const tbody = document.getElementById('historyTable');
+    const matchSummaryBody = document.getElementById('matchSummaryTable');
+    const gameSummaryBody = document.getElementById('gameSummaryTable');
 
+    // Render Match Summary table
     data.forEach((match, idx) => {
+      const date = match.date ? new Date(match.date) : null;
+      const dateStr = date ? date.toLocaleString() : 'N/A';
+      const players = Array.isArray(match.players) ? match.players : [];
+      const scores = Array.isArray(match.scores) ? match.scores : [];
+      const gameId = match.gameId || 'N/A';
+
+      if (players.length !== 4 || scores.length !== 4) {
+        console.warn(`Skipping invalid match at index ${idx}`, match);
+        return;
+      }
+
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${new Date(match.timestamp).toLocaleString()}</td>
-        <td>${match.teamA.join(' & ')}</td>
-        <td>${match.scores[0].join(', ')}</td>
-        <td>${match.teamB.join(' & ')}</td>
-        <td>${match.scores[1].join(', ')}</td>
+        <td>${gameId}</td>
+        <td>${match.matchId || match.globalMatchId || idx + 1}</td>
+        <td>${dateStr}</td>
+        <td>${players[0]}</td><td>${scores[0]}</td>
+        <td>${players[1]}</td><td>${scores[1]}</td>
+        <td>${players[2]}</td><td>${scores[2]}</td>
+        <td>${players[3]}</td><td>${scores[3]}</td>
       `;
-      tbody.appendChild(row);
+      matchSummaryBody.appendChild(row);
+    });
+
+    // Group matches by gameId for Game Summary
+    const gamesMap = new Map();
+
+    data.forEach(match => {
+      const gameId = match.gameId || 'N/A';
+      if (!gamesMap.has(gameId)) {
+        gamesMap.set(gameId, []);
+      }
+      gamesMap.get(gameId).push(match);
+    });
+
+    // Render Game Summary table
+    gamesMap.forEach((matches, gameId) => {
+      const playerPoints = new Map();
+      let earliestDate = null;
+      let latestDate = null;
+
+      matches.forEach(match => {
+        const date = match.date ? new Date(match.date) : null;
+        if (date) {
+          if (!earliestDate || date < earliestDate) earliestDate = date;
+          if (!latestDate || date > latestDate) latestDate = date;
+        }
+
+        if (Array.isArray(match.players) && Array.isArray(match.scores)) {
+          match.players.forEach((player, i) => {
+            playerPoints.set(player, (playerPoints.get(player) || 0) + match.scores[i]);
+          });
+        }
+      });
+
+      const players = Array.from(playerPoints.keys());
+      const totalScores = Array.from(playerPoints.values());
+      const winnerIndex = totalScores.indexOf(Math.min(...totalScores));
+      const winner = players[winnerIndex];
+      const winnerPoints = totalScores[winnerIndex];
+      const dateRange = earliestDate && latestDate
+        ? `${earliestDate.toLocaleDateString()} - ${latestDate.toLocaleDateString()}`
+        : 'N/A';
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${gameId}</td>
+        <td>${dateRange}</td>
+        <td>${players.join(', ')}</td>
+        <td>${winner}</td>
+        <td>${winnerPoints}</td>
+      `;
+      gameSummaryBody.appendChild(row);
     });
   </script>
 </body>
