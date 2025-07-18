@@ -1,25 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-
-
+/* ========== ROOT VARIABLES ========== */
 :root {
-  /* Colors */
   --bg-color: #121212;
   --card-bg: #1e1e1e;
   --input-bg: #2a2a2a;
   --text-color: #e0e0e0;
   --heading-color: #ffffff;
   --subheading-color: #b3b3b3;
-  --primary-color: #3a5068; /* nice bright blue */
+  --primary-color: #3a5068;
   --primary-hover: #2563eb;
-  --team-a: #3a5068;  /* fixed double # */
-  --team-b: #8b3a3a;  /* vibrant red */
+  --team-a: #3a5068;
+  --team-b: #8b3a3a;
   --border-color: #333;
   --disabled-opacity: 0.4;
-  /* Font */
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+:root.light {
+  --bg-color: #f5f5f5;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --text-color: #111111;
+  --heading-color: #000000;
+  --subheading-color: #555555;
+  --border-color: #dddddd;
+}
+
+/* ========== GLOBAL ========== */
 body {
   font-family: var(--font-family);
   background: var(--bg-color);
@@ -28,47 +36,45 @@ body {
   padding: 2rem;
 }
 
-h1 {
+h1, h2, h4 {
   color: var(--heading-color);
   font-weight: 700;
-  font-size: 2.4rem;
   margin-bottom: 0.5rem;
 }
 
+h1 { font-size: 2.4rem; }
 h2 {
-  margin-top: 2.5rem;
-  color: var(--subheading-color);
-  font-weight: 600;
   font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+h4 {
+  font-size: 1.6rem;
+  margin-bottom: 1.25rem;
 }
 
 input, button {
+  font-family: var(--font-family);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
   background-color: var(--input-bg);
   color: var(--text-color);
-  border: 1px solid var(--border-color);
-  padding: 0.5rem 1rem;
-  margin: 0.25rem 0.5rem 0.25rem 0;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: var(--font-family);
-  transition: border-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-input[type="number"] {
-  width: 80px;
-}
+input[type="number"] { width: 80px; }
 
 input:focus {
-  border-color: var(--primary-color);
   outline: none;
+  border-color: var(--primary-color);
 }
 
 button {
-  cursor: pointer;
-  border: none;
   background-color: var(--primary-color);
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  border: none;
   box-shadow: 0 4px 6px rgb(59 130 246 / 0.3);
 }
 
@@ -83,10 +89,10 @@ button:disabled {
   box-shadow: none;
 }
 
+/* ========== LISTS & TABLES ========== */
 ul {
   list-style: none;
   padding-left: 0;
-  margin: 0;
 }
 
 ul li {
@@ -100,137 +106,102 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
-  background-color: var(--card-bg);
+  background: var(--card-bg);
   border-radius: 10px;
-  overflow: hidden;
   box-shadow: 0 6px 15px rgb(0 0 0 / 0.6);
-  color: var(--text-color);
+  overflow: hidden;
 }
 
 th, td {
-  border: 1px solid var(--border-color);
   padding: 0.8rem 1rem;
   text-align: center;
+  border: 1px solid var(--border-color);
 }
 
 th {
-  background-color: var(--bg-color);
-  font-weight: 700;
+  background: var(--bg-color);
   color: var(--subheading-color);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
+/* ========== MATCH CARD ========== */
 .match {
+  max-width: 620px;
+  margin: 1.5rem auto;
+  padding: 1.25rem 2rem;
   background: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.7);
-  padding: 1.25rem 2rem;
-  margin: 1.5rem auto;
-  max-width: 620px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  color: var(--text-color);
+  gap: 1rem;
 }
 
-.match h4 {
-  margin-bottom: 1.25rem;
-  font-weight: 700;
-  color: var(--heading-color);
-  font-size: 1.6rem;
-  text-align: left;
-}
-
+/* ========== TEAM BLOCKS ========== */
 .teams {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin-bottom: 1.25rem;
   gap: 1rem;
 }
 
 .teamA, .teamB {
-  flex: 1 1 45%;
+  flex: 1;
   padding: 0.9rem 1.2rem;
   border-radius: 12px;
   font-weight: 700;
   font-size: 1.15rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   color: #fff;
-  letter-spacing: 0.02em;
   user-select: none;
 }
 
 .teamA {
-  background-color: var(--team-a);
+  background: var(--team-a);
   box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
 }
 
 .teamB {
-  background-color: var(--team-b);
+  background: var(--team-b);
   box-shadow: 0 4px 12px rgb(239 68 68 / 0.5);
 }
 
 .vs {
-  flex: 0 0 10%;
-  text-align: center;
-  font-weight: 800;
+  align-self: center;
   font-size: 1.3rem;
   color: var(--subheading-color);
-  align-self: center;
-  user-select: none;
+  font-weight: 800;
 }
 
+/* ========== SCORE INPUTS ========== */
 .score-inputs {
   display: flex;
   justify-content: space-between;
-  width: 100%;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
 .score-inputs label {
-  flex: 1 1 22%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex: 1;
+  text-align: center;
   font-weight: 600;
-  color: var(--text-color);
-  user-select: none;
 }
 
 .score-inputs input {
   margin-top: 0.35rem;
   padding: 0.4rem 0.6rem;
-  width: 70px;
   font-size: 1.2rem;
-  border: 1px solid var(--border-color);
   border-radius: 6px;
   text-align: center;
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  transition: border-color 0.3s ease;
 }
 
-.score-inputs input:focus {
-  border-color: var(--primary-color);
-  outline: none;
-}
-
+/* ========== BUTTONS INSIDE MATCH ========== */
 .match button {
-  padding: 0.6rem 1.4rem;
   margin: 0 0.4rem;
-  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
   font-size: 0.8rem;
-  cursor: pointer;
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+  border-radius: 10px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.5);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .match button:hover:not(:disabled) {
@@ -240,68 +211,41 @@ th {
   color: white;
 }
 
-#playerList li {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
-}
-
-
+/* ========== PLAYER BUTTON ========== */
 .player-btn {
-  background-color: #2a2a2a;
+  background: #2a2a2a;
   color: #ccc;
-  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 0.3rem 0.6rem;
   font-size: 0.8rem;
   margin-left: 0.4rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .player-btn:hover {
-  background-color: #3a3a3a;
-  color: #fff;
+  background: #3a3a3a;
+  color: white;
 }
 
-:root.light {
-  --bg-color: #f5f5f5;
-  --card-bg: #ffffff;
-  --input-bg: #ffffff;
-  --text-color: #111111;
-  --heading-color: #000000;
-  --subheading-color: #555555;
-  --primary-color: #3a5068;
-  --primary-hover: #2563eb;
-  --team-a: #3a5068;
-  --team-b: #8b3a3a;
-  --border-color: #dddddd;
-  --disabled-opacity: 0.4;
-}
-
+/* ========== THEME TOGGLE ========== */
 .theme-toggle {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  float: right;
   margin-top: -3.5rem;
-  margin-right: 1rem;
+  margin-bottom: 1rem;
 }
 
 .toggle-label {
-  position: relative;
-  display: inline-block;
   width: 50px;
   height: 26px;
   background: var(--border-color);
   border-radius: 50px;
   cursor: pointer;
   transition: background 0.3s ease;
+  position: relative;
 }
 
-.toggle-label .toggle-ball {
-  content: "";
+.toggle-ball {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -329,3 +273,38 @@ input#themeToggle:checked + .toggle-label .toggle-ball {
   color: var(--subheading-color);
 }
 
+/* ========== RESPONSIVE ========== */
+@media (max-width: 640px) {
+  body {
+    padding: 1rem;
+  }
+
+  .match {
+    padding: 1rem;
+  }
+
+  .teams {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .score-inputs {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .score-inputs label {
+    flex: none;
+    width: 100%;
+  }
+
+  .theme-toggle {
+    justify-content: flex-start;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    padding: 1.5rem;
